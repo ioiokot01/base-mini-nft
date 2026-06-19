@@ -19,7 +19,9 @@ const ABI = [
   "function remaining() view returns (uint256)",
   "function mintedBy(address) view returns (uint256)",
   "function balanceOf(address) view returns (uint256)",
+  "function ownerOf(uint256 tokenId) view returns (address)",
   "event Minted(address indexed minter, uint256 indexed tokenId)",
+  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
 ];
 
 // ---------------------------------------------------------------------------
@@ -50,6 +52,10 @@ const els = {
   baseUriInput: document.getElementById("baseUriInput"),
   setUriBtn: document.getElementById("setUriBtn"),
   withdrawBtn: document.getElementById("withdrawBtn"),
+  myNftsSection: document.getElementById("myNftsSection"),
+  myNfts: document.getElementById("myNfts"),
+  myNftCount: document.getElementById("myNftCount"),
+  emptyMine: document.getElementById("emptyMine"),
 };
 
 // ---------------------------------------------------------------------------
@@ -166,9 +172,54 @@ async function refresh() {
     }
 
     await renderFeed();
+    await renderMyNfts(owned);
     setStatus("");
   } catch (err) {
     setStatus(err.shortMessage || err.message || "Failed to load.", "error");
+  }
+}
+
+async function renderMyNfts(owned) {
+  els.myNftsSection.classList.remove("hidden");
+  els.myNfts.innerHTML = "";
+  els.myNftCount.textContent = owned > 0n ? `(${owned})` : "";
+
+  if (owned === 0n) {
+    els.emptyMine.classList.remove("hidden");
+    return;
+  }
+
+  // No ERC721Enumerable on-chain, so find candidate ids from Minted events,
+  // then confirm current ownership (handles tokens transferred away).
+  try {
+    const events = await contract.queryFilter(
+      contract.filters.Minted(account),
+      -5000
+    );
+    const ids = [...new Set(events.map((e) => e.args.tokenId.toString()))];
+    const owners = await Promise.all(
+      ids.map((id) => contract.ownerOf(id).catch(() => null))
+    );
+    const mine = ids.filter(
+      (_, i) => owners[i] && owners[i].toLowerCase() === account
+    );
+
+    if (mine.length === 0) {
+      els.emptyMine.classList.remove("hidden");
+      return;
+    }
+    els.emptyMine.classList.add("hidden");
+    mine
+      .sort((a, b) => Number(a) - Number(b))
+      .forEach((id) => {
+        const card = document.createElement("div");
+        card.className = "nft-card";
+        card.textContent = "#" + id;
+        els.myNfts.appendChild(card);
+      });
+  } catch {
+    // Best-effort: some RPCs limit log ranges.
+    els.emptyMine.classList.add("hidden");
   }
 }
 

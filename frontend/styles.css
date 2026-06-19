@@ -268,6 +268,27 @@ h2 {
   border-color: var(--warn);
 }
 
+.my-nfts {
+  margin-bottom: 8px;
+}
+
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+.nft-card {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  font-weight: 800;
+  color: var(--accent-hover);
+}
+
 .muted {
   color: var(--muted);
 }
