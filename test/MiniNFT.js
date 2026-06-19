@@ -170,4 +170,34 @@ describe("MiniNFT", function () {
       );
     });
   });
+
+  describe("ERC721 behavior", function () {
+    it("transfers a token and updates balances", async function () {
+      const { nft, alice, bob } = await deploy();
+      await nft.connect(alice).mint(1, { value: MINT_PRICE });
+
+      await nft.connect(alice).transferFrom(alice.address, bob.address, 1);
+      expect(await nft.ownerOf(1)).to.equal(bob.address);
+      expect(await nft.balanceOf(alice.address)).to.equal(0n);
+      expect(await nft.balanceOf(bob.address)).to.equal(1n);
+    });
+
+    it("supports approvals", async function () {
+      const { nft, alice, bob } = await deploy();
+      await nft.connect(alice).mint(1, { value: MINT_PRICE });
+
+      await nft.connect(alice).approve(bob.address, 1);
+      expect(await nft.getApproved(1)).to.equal(bob.address);
+
+      // Approved operator can move the token.
+      await nft.connect(bob).transferFrom(alice.address, bob.address, 1);
+      expect(await nft.ownerOf(1)).to.equal(bob.address);
+    });
+
+    it("advertises the ERC721 interface via supportsInterface", async function () {
+      const { nft } = await deploy();
+      // 0x80ac58cd is the ERC-721 interface id.
+      expect(await nft.supportsInterface("0x80ac58cd")).to.equal(true);
+    });
+  });
 });
