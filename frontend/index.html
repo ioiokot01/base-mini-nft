@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MiniNFT · Base</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1>🎨 MiniNFT</h1>
+        <p class="subtitle">Mint an NFT on Base. Limited supply.</p>
+        <button id="connectBtn" class="btn">Connect Wallet</button>
+        <p id="account" class="account hidden"></p>
+      </header>
+
+      <section class="progress-card">
+        <div class="progress-head">
+          <span id="mintedLabel" class="minted-label">— / —</span>
+          <span class="muted">minted</span>
+        </div>
+        <div class="bar"><div id="barFill" class="bar-fill"></div></div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-label">Price</span>
+            <span id="price" class="stat-value">— ETH</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">You own</span>
+            <span id="owned" class="stat-value">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Per wallet</span>
+            <span id="perWallet" class="stat-value">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="mint-card">
+        <div class="qty-row">
+          <button id="minusBtn" class="step-btn" disabled>−</button>
+          <input id="qtyInput" type="number" min="1" max="10" value="1" disabled />
+          <button id="plusBtn" class="step-btn" disabled>+</button>
+        </div>
+        <button id="mintBtn" class="btn btn-big" disabled>Mint 🎨</button>
+        <p id="costHint" class="muted cost-hint"></p>
+      </section>
+
+      <p id="status" class="status"></p>
+
+      <section class="feed">
+        <div class="feed-head">
+          <h2>Recently minted</h2>
+          <button id="refreshBtn" class="btn btn-ghost" disabled>Refresh</button>
+        </div>
+        <ul id="feed" class="mints"></ul>
+        <p id="emptyFeed" class="empty">No mints yet — be the first!</p>
+      </section>
+
+      <section id="ownerPanel" class="owner-panel hidden">
+        <h2>Owner</h2>
+        <div class="owner-row">
+          <input id="baseUriInput" type="text" placeholder="ipfs://CID/" />
+          <button id="setUriBtn" class="btn">Set base URI</button>
+        </div>
+        <p class="muted">Withdraw collected funds:</p>
+        <button id="withdrawBtn" class="btn btn-warn">Withdraw all</button>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
