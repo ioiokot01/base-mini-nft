@@ -1,5 +1,10 @@
 # MiniNFT
 
+[![CI](https://github.com/ioiokot01/base-mini-nft/actions/workflows/ci.yml/badge.svg)](https://github.com/ioiokot01/base-mini-nft/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)
+![Chain](https://img.shields.io/badge/Base-Sepolia-0052ff.svg)
+
 A minimal **ERC-721** NFT collection + mint dApp for the [Base](https://base.org)
 ecosystem. Anyone can mint (paying the mint price), supply is capped, and a
 per-wallet limit keeps it fair. The owner manages metadata and withdraws funds.
